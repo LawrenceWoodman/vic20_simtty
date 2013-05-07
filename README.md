@@ -13,6 +13,11 @@ To assemble the source to `simtty.prg` and put it on a disk image called `simtty
 
     $ make
 
+From your Vic-20 load `simtty.prg` and start the code:
+
+    LOAD "SIMTTY",8,1
+    SYS 828
+
 
 History
 -------
