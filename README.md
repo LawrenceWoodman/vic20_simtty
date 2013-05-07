@@ -21,7 +21,7 @@ From your Vic-20 load `simtty.prg` and start the code:
 
 History
 -------
-This was created after writing the article: [Creating a TTY Simulator in Assembly Language on the Vic-20](http://techtinkering.com/2013/05/04/creating-a-tty-simulator-in-assembly-language-on-the-vic-20) and creating its associated [video](http://www.youtube.com/watch?v=kmvF85euefs).  Both of these works used Vicmon to enter the code, but I thought it would be instructive to have it in a form that could be cross-assembled as well.
+This was created after writing the article: [Creating a TTY Simulator in Assembly Language on the Vic-20](http://techtinkering.com/2013/05/04/creating-a-tty-simulator-in-assembly-language-on-the-vic-20) and creating its associated [video](http://www.youtube.com/watch?v=kmvF85euefs).  Both of these works used Vicmon to enter the code, but I thought it would be instructive to have it in a form that could be cross-assembled as well.  This has also allowed the program to be extended.
 
 Licence
 -------

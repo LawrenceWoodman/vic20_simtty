@@ -6,8 +6,10 @@
 ;
 #include "basicstubs.inc"
 
-#define Volume      $900e
-#define Speaker2    $900b
+#define Volume          $900e
+#define Speaker2        $900b
+#define CassetteBuffer  $033c
+
 #define VolMax      $0f
 #define TTYNoise    $80
 
@@ -21,17 +23,36 @@ ProgStart   = $1001
             * = ProgStart
             basicStubUnexpanded(2013)
 
+            ;--------------------------------------------------------
             ; Initialize TTY routine to be used when $FFD2 is called
-            lda #<Main     ; Point output vector used by $FFD2 to our routine
+            ;--------------------------------------------------------
+
+            ; Copy the TTY routine to the cassette buffer
+            ldx #(EndMain-Main-1)
+CopyLoop    lda CopyFrom, x
+            sta CassetteBuffer, x
+            dex
+            bpl CopyLoop
+
+            ; Point output vector used by $FFD2 to the cassette buffer
+            lda #<CassetteBuffer
             sta $0326
-            lda #>Main
+            lda #>CassetteBuffer
             sta $0327
 
+            ; Set volume to max
             lda #VolMax
             sta Volume
+
             rts
 
-            ; Routine that is called when $FFD2 is called
+            ;-----------------------------------------------
+            ; The main TTY simulation code that is called
+            ; when CHROUT ($FFD2) is called
+            ;-----------------------------------------------
+CopyFrom    ; Where the TTY code should be copied from
+
+            * = CassetteBuffer
 Main        pha            ; Save the character to be printed
 
             cmp #Space     ; Skip making a noise if a space character
@@ -78,3 +99,4 @@ GapDelay    dey
 
             ; Jump to the normal output vector stored in $0326
             jmp OrigOutVect
+EndMain
