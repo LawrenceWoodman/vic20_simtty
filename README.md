@@ -4,8 +4,8 @@ Simulate a TTY on the Vic-20, by taking over the _CHROUT_ (`$FFD2`) routine.
 
 Requirements
 ------------
-*  Dasm
-*  Vice or C1541 (To create the disk)
+*  xa65 (To assemble)
+*  Vice or C1541 (To create the disk image)
 
 Usage
 -----

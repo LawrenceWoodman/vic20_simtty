@@ -5,67 +5,74 @@
 ; Licensed under an MIT licence.  Please see LICENCE.md for details.
 ;
 
-            PROCESSOR 6502
+#define Volume      $900e
+#define Speaker2    $900b
+#define VolMax      $0f
+#define TTYNoise    $80
 
-Volume      EQU $900e
-Speaker2    EQU $900b
-VolMax      EQU $0f
-TTYNoise    EQU $80
+#define Space       $20
+#define CR          $0d
 
-Space       EQU $20
-CR          EQU $0d
+OrigOutVect = $f27a
+ProgStart   = $033c
 
-OrigOutVect EQU $f27a
-
-
-            ORG $033c
+            .word ProgStart     ; PRG Header to say where to load program
+            * = ProgStart
 
             ; Initialize TTY routine to be used when $FFD2 is called
-            lda #[<Main]   ; Point output vector used by $FFD2 to our routine
-            sta $0326      ; |
-            lda #[>Main]   ; |
-            sta $0327      ; \
-            lda #VolMax    ; Set the volume to maximum
-            sta Volume     ; \
+            lda #<Main     ; Point output vector used by $FFD2 to our routine
+            sta $0326
+            lda #>Main
+            sta $0327
+
+            lda #VolMax
+            sta Volume
             rts
 
             ; Routine that is called when $FFD2 is called
 Main        pha            ; Save the character to be printed
 
             cmp #Space     ; Skip making a noise if a space character
-            beq Delays     ; \
+            beq Delays
             cmp #CR        ; Skip making a noise if a return character
-            beq Delays     ; \
+            beq Delays
 
-            lda #TTYNoise  ; Make the lowest note possible with speaker 2
-            sta Speaker2   ; \
+            ; Make the lowest note possible with speaker 2
+            lda #TTYNoise
+            sta Speaker2
 
-Delays      txa            ; Save registers because $FFD2 doesn't alter them
-            pha            ; |
-            tya            ; |
-            pha            ; \
+Delays      ; Save registers because $FFD2 doesn't alter them
+            txa
+            pha
+            tya
+            pha
 
-            ldy #$00       ; Hold note if making a noise or give equal gap
-            ldx #$15       ; |
-NoteDelay   dey            ; |
-            bne NoteDelay  ; |
-            dex            ; |
-            bne NoteDelay  ; \
+            ; Hold note if making a noise or give equal gap
+            ldy #$00
+            ldx #$15
+NoteDelay   dey
+            bne NoteDelay
+            dex
+            bne NoteDelay
 
-            lda #$00       ; Turn off speaker 2
-            sta Speaker2   ; \
+            ; Turn off speaker 2
+            lda #$00
+            sta Speaker2
 
-            ldy #$00       ; Delay between letters
-            ldx #$10       ; |
-GapDelay    dey            ; |
-            bne GapDelay   ; |
-            dex            ; |
-            bne GapDelay   ; \
+            ; Delay between letters
+            ldy #$00
+            ldx #$10
+GapDelay    dey
+            bne GapDelay
+            dex
+            bne GapDelay
 
-            pla            ; Restore the registers
-            tay            ; |
-            pla            ; |
-            tax            ; |
-            pla            ; \
+            ; Restore registers
+            pla
+            tay
+            pla
+            tax
+            pla
 
-            jmp OrigOutVect ; Jump to the normal output vector stored in $0326
+            ; Jump to the normal output vector stored in $0326
+            jmp OrigOutVect
