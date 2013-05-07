@@ -4,6 +4,7 @@
 ;
 ; Licensed under an MIT licence.  Please see LICENCE.md for details.
 ;
+#include "basicstubs.inc"
 
 #define Volume      $900e
 #define Speaker2    $900b
@@ -14,10 +15,11 @@
 #define CR          $0d
 
 OrigOutVect = $f27a
-ProgStart   = $033c
+ProgStart   = $1001
 
             .word ProgStart     ; PRG Header to say where to load program
             * = ProgStart
+            basicStubUnexpanded(2013)
 
             ; Initialize TTY routine to be used when $FFD2 is called
             lda #<Main     ; Point output vector used by $FFD2 to our routine
