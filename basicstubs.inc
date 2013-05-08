@@ -15,7 +15,7 @@
             .word year        ; The line number for the SYS statement     :\
             .byt  $9e         ; SYS token                                 :\
             .asc  " "                                                     :\
-            .asc "4110"       ; Start of machine language                 :\
+            .asc  "4110"      ; Start of machine language                 :\
             .byt 0            ; End of BASIC line                         :\
 basicEnd    .word 0           ; End of BASIC program                      :\
             .)
